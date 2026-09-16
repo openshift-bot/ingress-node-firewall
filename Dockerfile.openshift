@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM registry.ci.openshift.org/ocp/builder:rhel-9-golang-1.24-openshift-4.20 AS builder
+FROM quay-proxy.ci.openshift.org/openshift/ci:ocp_builder_rhel-9-golang-1.24-openshift-4.20 AS builder
 
 WORKDIR /workspace
 
@@ -18,7 +18,7 @@ COPY bindata/manifests/ bindata/manifests/
 # Build
 RUN CGO_ENABLED=0 GO111MODULE=on go build -a -mod=vendor -o manager main.go
 
-FROM registry.ci.openshift.org/ocp/4.20:base-rhel9
+FROM quay-proxy.ci.openshift.org/openshift/ci:ocp_4.20_base-rhel9
 WORKDIR /
 COPY --from=builder /workspace/manager .
 COPY --from=builder /workspace/bindata/manifests /bindata/manifests
